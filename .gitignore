@@ -1,0 +1,6 @@
+# 本地测试用 Junction(指向 dsh 安装目录),不入库
+node_modules/
+
+# 日志与临时文件
+*.log
+*.tmp

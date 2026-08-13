@@ -1,0 +1,7 @@
+# dsh-background 插件的配置补丁层：
+# 作为 web profile 的一个 bundle 被应用，向配置树插入本插件的条目。
+# 条目 `name` 指向本包根导出（lib/index.js 的 apply），
+# 客户端一半由 dsh-client-modules 根据 package.json 的 dsh.client 声明自动装配。
+- insert:
+    - id: background
+      name: 'dsh-background'
