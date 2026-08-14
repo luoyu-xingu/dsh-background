@@ -1,7 +1,7 @@
-{
+﻿{
   "name": "dsh-background",
-  "description": "DeepSeek Harness Web 背景图片插件：在设置-通用-外观中填写本地图片路径替换网页背景,并提供预览与填充方式",
-  "version": "0.2.1",
+  "description": "DeepSeek Harness Web 鑳屾櫙鍥剧墖鎻掍欢锛氬湪璁剧疆-閫氱敤-澶栬涓～鍐欐湰鍦板浘鐗囪矾寰勬浛鎹㈢綉椤佃儗鏅?骞舵彁渚涢瑙堜笌濉厖鏂瑰紡",
+  "version": "0.2.2",
   "type": "module",
   "main": "lib/index.js",
   "exports": {
