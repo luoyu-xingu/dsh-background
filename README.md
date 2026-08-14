@@ -52,8 +52,8 @@ dsh plugin --profile web add file:./dsh-background
 ## 实现原理
 
 - 宿主端(`lib/index.js`):
-  - 通过 `ctx.settings.register` 注册 `ui-background` 命名空间(path),
-    作为进程内持久化通道;
+  - 通过 `ctx.settings.register` 注册 `ui-background` 命名空间
+    (path / veil),作为进程内持久化通道;
   - `webServer.register` 注册图片路由 `/dsh-background/image`,按当前
     配置读取本地文件并以正确的 content-type 提供;
   - `webServer.tapIndex` 注入启动期背景样式与 `data-dsh-background`
@@ -83,13 +83,6 @@ dsh plugin --profile web remove dsh-background
 ```
 
 并在 `settings.yaml` 中删除 `ui-background` 段即可清空背景设置。
-
-## 测试
-
-```bash
-node dsh-background/smoke-test.mjs      # 宿主端:schema / 路径清洗 / 背景 CSS 构建
-node dsh-background/client-smoke.mjs    # 客户端 bundle:模块注册 / 插槽注入 / RPC 调用路径
-```
 
 ## License
 
