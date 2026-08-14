@@ -64,9 +64,12 @@ dsh --profile web --dump-config
 - **背景应用**:用覆盖 body 上别名令牌的方式实现——
   `--dsw-alias-bg-base` 指向 `url("/dsh-background/image?v=<rev>") center / cover
   no-repeat fixed` 加明暗主题兜底色,应用框架的背景读这个令牌,因此与主题系统
-  天然兼容。客户端修改 style 元素文本 + 设置 `html[data-dsh-background]` 属性;
-  宿主端 `webServer.tapIndex` 在 index.html `<head>` 注入同样的样式,保证刷新
-  首帧无默认背景闪烁。**两侧的 CSS 构建逻辑必须保持一致**。
+  天然兼容。背景栈最上层按主题叠加半透明可读性蒙层(浅色主题白蒙层 /
+  深色主题深蒙层),保证任意亮度图片上文字可读;作用域限定
+  `html[data-dsh-background]`,不影响默认外观。客户端修改 style 元素文本 +
+  设置 `html[data-dsh-background]` 属性;宿主端 `webServer.tapIndex` 在
+  index.html `<head>` 注入同样的样式,保证刷新首帧无默认背景闪烁。
+  **两侧的 CSS 构建逻辑必须保持一致**。
 - **产品决定(用户明确要求,勿恢复)**:没有拖拽换背景;没有"背景覆盖侧边栏"
   开关;填充方式固定 cover,无 contain/tile 选项。
 - **插件装配**:`package.json` 的 `dsh.bundle.patch` 指向 `cordis.patch.yml`
