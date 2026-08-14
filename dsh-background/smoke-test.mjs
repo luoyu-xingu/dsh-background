@@ -1,8 +1,6 @@
 // dsh-background 宿主端烟雾测试:path 唯一字段的 schema 校验、路径清洗、归一化、背景 CSS 构建。
-// 运行:node smoke-test.mjs(依赖经 E:\dsh-background\node_modules 的 Junction 解析)
-import { pathToFileURL } from "node:url";
-
-const mod = await import(pathToFileURL("E:/dsh-background/lib/index.js"));
+// 运行:node dsh-background/smoke-test.mjs(需要本地 node_modules 能解析 @deepseek-ai/dsh-settings 等 peer 依赖)
+const mod = await import(new URL("./lib/index.js", import.meta.url));
 
 const schema = mod.BackgroundSettingsSchema;
 
@@ -12,8 +10,8 @@ console.assert(defaults.path === "", "schema default path");
 console.log("defaults:", JSON.stringify(defaults));
 
 // 2. 合法值(含 Windows 路径与空格)
-const full = schema({ path: "C:\\Users\\<user>\\a.jpg" });
-console.assert(full.path === "C:\\Users\\<user>\\a.jpg", "valid path");
+const full = schema({ path: "C:\\Users\\someone\\a.jpg" });
+console.assert(full.path === "C:\\Users\\someone\\a.jpg", "valid path");
 console.log("full:", JSON.stringify(full));
 
 // 3. 路径清洗
@@ -22,8 +20,8 @@ console.assert(mod.cleanPath(123) === "", "non-string cleared");
 console.log("cleanPath: OK");
 
 // 4. 归一化(容忍脏数据/旧版本遗留字段)
-const norm = mod.normalizeSection({ path: "  E:\\x.png  ", fit: "tile", sidebar: false });
-console.assert(norm.path === "E:\\x.png" && !("fit" in norm) && !("sidebar" in norm), "normalize drops legacy fields");
+const norm = mod.normalizeSection({ path: "  D:\\x.png  ", fit: "tile", sidebar: false });
+console.assert(norm.path === "D:\\x.png" && !("fit" in norm) && !("sidebar" in norm), "normalize drops legacy fields");
 console.log("normalizeSection: OK");
 
 // 5. 背景 CSS 构建(固定 cover)

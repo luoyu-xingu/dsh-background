@@ -1,10 +1,9 @@
 // dsh-background 客户端 bundle 结构测试:模拟 ModuleLoader 环境,
 // 验证工厂执行、导出形状、以及 apply 的插槽注册路径(带 rpc 桩)。
-// 运行:node client-smoke.mjs
+// 运行:node dsh-background/client-smoke.mjs
 import { readFileSync } from "node:fs";
-import { pathToFileURL } from "node:url";
 
-const source = readFileSync("E:/dsh-background/lib/client.js", "utf8");
+const source = readFileSync(new URL("./lib/client.js", import.meta.url), "utf8");
 
 let registered = null;
 globalThis.window = {
@@ -22,7 +21,7 @@ globalThis.document = {
   querySelector: () => null
 };
 
-await import(pathToFileURL("E:/dsh-background/lib/client.js") + "?t=" + Date.now());
+await import(new URL("./lib/client.js", import.meta.url) + "?t=" + Date.now());
 
 if (registered === null) throw new Error("bundle did not register with __ModuleLoader__.load");
 console.assert(registered.id === "dsh-background", "module id must equal package name");

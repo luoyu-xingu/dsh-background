@@ -8,18 +8,18 @@
 ## 仓库结构
 
 ```
-E:\dsh-background\
+.
 ├── AGENTS.md                  # 本文件
-├── dsh-background\            # 插件包(dsh plugin add file:... 安装的就是它)
-│   ├── package.json           # dsh.bundle.patch + dsh.client 清单
-│   ├── cordis.patch.yml       # 向配置树插入 background 条目
-│   ├── lib\
-│   │   ├── index.js           # 宿主端(Node):settings 注册 + 图片路由 + 配置 RPC + 启动注入
-│   │   └── client.js          # 客户端(浏览器):外观设置行 + 预览 + 背景应用
-│   ├── smoke-test.mjs         # 宿主端烟雾测试
-│   ├── client-smoke.mjs       # 客户端 bundle 结构测试
-│   └── README.md              # 用户文档
-└── node_modules\              # Junction 到 dsh 安装目录(仅本地测试依赖,不入库)
+├── .gitignore
+└── dsh-background\            # 插件包(dsh plugin add file:... 安装的就是它)
+    ├── package.json           # dsh.bundle.patch + dsh.client 清单
+    ├── cordis.patch.yml       # 向配置树插入 background 条目
+    ├── lib\
+    │   ├── index.js           # 宿主端(Node):settings 注册 + 图片路由 + 配置 RPC + 启动注入
+    │   └── client.js          # 客户端(浏览器):外观设置行 + 预览 + 背景应用
+    ├── smoke-test.mjs         # 宿主端烟雾测试
+    ├── client-smoke.mjs       # 客户端 bundle 结构测试
+    └── README.md              # 用户文档
 ```
 
 ## 常用命令
@@ -33,9 +33,9 @@ node dsh-background/client-smoke.mjs
 
 # 安装 / 重装到 web profile(修改插件源码后必须重装,file: 安装是快照)
 dsh plugin --profile web remove dsh-background
-dsh plugin --profile web add file:E:\dsh-background
+dsh plugin --profile web add file:./dsh-background
 
-# 端到端验证:在 3091 起一个诊断实例(与用户 3080 的实例并存,勿动 3080)
+# 端到端验证:另起一个诊断端口(勿动用户正在运行的实例)
 dsh web --port 3091
 
 # 配置树组合检查
@@ -86,16 +86,14 @@ dsh --profile web --dump-config
    - `GET /dsh-background/image`(200 + 正确 content-type 与字节);
    - `GET /`(index.html `<head>` 里有 `data-plugin="dsh-background"` 的启动样式);
    - `GET /plugins/dsh-background/client.js`(200)。
-4. 验证完成后杀掉诊断实例;**不要动 3080 上用户正在运行的实例**;提醒用户
+4. 验证完成后杀掉诊断实例;**不要动用户正在运行的实例**;提醒用户
    重启 `dsh web` 使插件生效(插件清单在进程启动时扫描,进程级缓存)。
 
-## 已知环境事实
+## 环境注意事项
 
-- dsh 安装:`<dsh-install>`(版本 0.1.0-rc.6)。
-- 用户 web profile:`C:\Users\<user>\.dsh\profiles\web`,设置文档
-  `C:\Users\<user>\.dsh\settings.yaml`(背景配置在 `ui-background` 段)。
-- `E:\dsh-background\node_modules` 下的 Junction(指向 dsh 安装的
-  `@deepseek-ai/dsh-settings`、`@deepseek-ai/schemastery`)仅供本地烟雾测试
-  解析依赖,已被 .gitignore 排除。
-- 诊断实例与用户实例共享同一份 settings.yaml,测试写入后注意恢复预期状态
-  (当前预期:背景为用户桌面图片 `C:\Users\<user>\Desktop\example.jpg`)。
+- 本机 `node_modules/` 下指向 dsh 安装目录的 Junction(供烟雾测试解析
+  `@deepseek-ai/dsh-settings`、`@deepseek-ai/schemastery` 依赖)仅存在于
+  本地,已被 .gitignore 排除,不要提交。
+- 诊断实例与用户实例共享同一份 `$DSH_HOME/settings.yaml`,测试写入后
+  注意把 `ui-background` 段恢复为未配置状态(无默认背景)。
+
