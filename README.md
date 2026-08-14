@@ -81,4 +81,4 @@ node dsh-background/client-smoke.mjs    # 客户端 bundle:模块注册 / 插槽
 
 ## License
 
-MIT
+[MIT](./LICENSE)

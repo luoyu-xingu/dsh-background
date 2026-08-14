@@ -11,29 +11,29 @@
 .
 ├── AGENTS.md                  # 本文件
 ├── .gitignore
-└── dsh-background\            # 插件包(dsh plugin add file:... 安装的就是它)
-    ├── package.json           # dsh.bundle.patch + dsh.client 清单
-    ├── cordis.patch.yml       # 向配置树插入 background 条目
-    ├── lib\
-    │   ├── index.js           # 宿主端(Node):settings 注册 + 图片路由 + 配置 RPC + 启动注入
-    │   └── client.js          # 客户端(浏览器):外观设置行 + 预览 + 背景应用
-    ├── smoke-test.mjs         # 宿主端烟雾测试
-    ├── client-smoke.mjs       # 客户端 bundle 结构测试
-    └── README.md              # 用户文档
+├── LICENSE                    # MIT
+├── package.json               # dsh.bundle.patch + dsh.client 清单
+├── cordis.patch.yml           # 向配置树插入 background 条目
+├── lib\
+│   ├── index.js               # 宿主端(Node):settings 注册 + 图片路由 + 配置 RPC + 启动注入
+│   └── client.js              # 客户端(浏览器):外观设置行 + 预览 + 背景应用
+├── smoke-test.mjs             # 宿主端烟雾测试
+├── client-smoke.mjs           # 客户端 bundle 结构测试
+└── README.md                  # 用户文档
 ```
 
 ## 常用命令
 
 ```bash
-# 语法检查与单元级测试
-node --check dsh-background/lib/index.js
-node --check dsh-background/lib/client.js
-node dsh-background/smoke-test.mjs
-node dsh-background/client-smoke.mjs
+# 语法检查与单元级测试(在仓库根目录执行)
+node --check lib/index.js
+node --check lib/client.js
+node smoke-test.mjs
+node client-smoke.mjs
 
 # 安装 / 重装到 web profile(修改插件源码后必须重装,file: 安装是快照)
 dsh plugin --profile web remove dsh-background
-dsh plugin --profile web add file:./dsh-background
+dsh plugin --profile web add file:.
 
 # 端到端验证:另起一个诊断端口(勿动用户正在运行的实例)
 dsh web --port 3091
@@ -78,7 +78,7 @@ dsh --profile web --dump-config
 
 ## 修改流程
 
-1. 修改 `dsh-background/lib/*`;运行上述 `node --check` 与两个烟雾测试。
+1. 修改 `lib/*`;运行上述 `node --check` 与两个烟雾测试。
 2. `dsh plugin --profile web remove dsh-background` 后重新 `add file:...`
    (file: 安装是快照,remove+add 才能刷新副本)。
 3. 起 `dsh web --port 3091` 诊断实例,用以下协议做端到端验证:
