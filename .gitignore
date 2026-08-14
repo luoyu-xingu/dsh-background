@@ -4,3 +4,7 @@ node_modules/
 # 日志与临时文件
 *.log
 *.tmp
+
+# 仅保留在本地的测试脚本,不入库
+smoke-test.mjs
+client-smoke.mjs
