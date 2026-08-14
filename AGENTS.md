@@ -70,6 +70,13 @@ dsh --profile web --dump-config
   设置 `html[data-dsh-background]` 属性;宿主端 `webServer.tapIndex` 在
   index.html `<head>` 注入同样的样式,保证刷新首帧无默认背景闪烁。
   **两侧的 CSS 构建逻辑必须保持一致**。
+  - **已知耦合**:输入框停靠区遮罩(composerSeat)的渐变用
+    `color-mix(… var(--dsw-alias-bg-base) …)`,变量带 url 会整体失效变透明,
+    导致滚动文字透到输入框下方;插件用
+    `html[data-dsh-background] body [data-phase=active] .wSkVaW_composerSeat`
+    恢复不透明渐隐遮罩。`data-phase` 是稳定属性,`wSkVaW_composerSeat` 是
+    dsh-client-ui-conversation 0.1.0-rc.6 的产物类名——dsh 升级若类名变化,
+    该规则失效时仅退化为旧行为(文字透出),不会破坏其它功能;升级后需核对。
 - **产品决定(用户明确要求,勿恢复)**:没有拖拽换背景;没有"背景覆盖侧边栏"
   开关;填充方式固定 cover,无 contain/tile 选项。
 - **插件装配**:`package.json` 的 `dsh.bundle.patch` 指向 `cordis.patch.yml`
