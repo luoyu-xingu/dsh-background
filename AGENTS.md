@@ -70,13 +70,22 @@ dsh --profile web --dump-config
   设置 `html[data-dsh-background]` 属性;宿主端 `webServer.tapIndex` 在
   index.html `<head>` 注入同样的样式,保证刷新首帧无默认背景闪烁。
   **两侧的 CSS 构建逻辑必须保持一致**。
-  - **已知耦合**:输入框停靠区遮罩(composerSeat)的渐变用
+  - **蒙层强度走 CSS 变量**:两侧 CSS 中蒙层 alpha 一律写成
+    `var(--dshbg-veil-alpha, <当前值>)`;运行时(含滑块提交)只
+    `document.documentElement.style.setProperty('--dshbg-veil-alpha', …)`,
+    **不要**在蒙层变化时重写样式表文本——no-store 图片会被重新拉取,
+    表现为滑块每次滑动闪一下。样式表文本只在图片路径变化(图片 URL
+    需要换新)时重写;宿主端 boot 注入的内联脚本同时设置该变量。
+  - **已知耦合**:输入框停靠区遮罩(composerSeat)的原渐变用
     `color-mix(… var(--dsw-alias-bg-base) …)`,变量带 url 会整体失效变透明,
     导致滚动文字透到输入框下方;插件用
-    `html[data-dsh-background] body [data-phase=active] .wSkVaW_composerSeat`
-    恢复不透明渐隐遮罩。`data-phase` 是稳定属性,`wSkVaW_composerSeat` 是
-    dsh-client-ui-conversation 0.1.0-rc.6 的产物类名——dsh 升级若类名变化,
-    该规则失效时仅退化为旧行为(文字透出),不会破坏其它功能;升级后需核对。
+    `html[data-dsh-background] body [data-phase=active] .wSkVaW_composerSeat::before`
+    铺与页面一致的背景(图+蒙层,同 var、fixed 视口对齐,无缝衔接),
+    顶部 36px 用 mask 渐隐挡住滚动文字——**不要**改回纯色渐隐,否则输入框
+    下方会被盖成白块,破坏背景连续性。`data-phase` 是稳定属性,
+    `wSkVaW_composerSeat` 是 dsh-client-ui-conversation 0.1.0-rc.6 的产物类名——
+    dsh 升级若类名变化,该规则失效时仅退化为旧行为(文字透出),不会破坏
+    其它功能;升级后需核对。
 - **产品决定(用户明确要求,勿恢复)**:没有拖拽换背景;没有"背景覆盖侧边栏"
   开关;填充方式固定 cover,无 contain/tile 选项。
 - **插件装配**:`package.json` 的 `dsh.bundle.patch` 指向 `cordis.patch.yml`
