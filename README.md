@@ -27,8 +27,11 @@ DeepSeek Harness Web 背景图片插件:在 **设置 → 通用设置 → 外观
 ## 安装
 
 ```bash
-# 从 GitHub 安装(把 <username> 换成你的 GitHub 用户名)
-dsh plugin --profile web add github:<username>/dsh-background
+# 从 npm 安装(推荐)
+dsh plugin --profile web add dsh-background
+
+# 或从 GitHub 安装
+dsh plugin --profile web add github:luoyu-xingu/dsh-background
 
 # 或克隆后从本地目录安装
 dsh plugin --profile web add file:./dsh-background
@@ -62,7 +65,11 @@ dsh plugin --profile web add file:./dsh-background
     AppearanceRow 模式);
   - 通过 `ctx.connection.rpc.call` 读写配置;
   - 用覆盖 body 上 `--dsw-alias-bg-base` 别名令牌的方式应用背景
-    ——与主题系统、明暗模式天然兼容。
+    ——与主题系统、明暗模式天然兼容;
+  - 蒙层强度通过 CSS 变量 `--dshbg-veil-alpha` 实时应用,调整强度
+    不重写样式表、不重新拉取图片,滑动流畅无闪动;
+  - 输入框停靠区用 `::before` 伪元素铺与页面一致的背景(图+蒙层)
+    并加顶部渐隐 mask,滚动文字不会透到输入框下方,背景图也保持连续。
 
 > 为什么不直接用 settingsScope?当前版本(dsh 0.1.0-rc.6)的 settings
 > 网关只对硬编码白名单内的命名空间开放浏览器读写,第三方插件注册的
